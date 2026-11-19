@@ -1,12 +1,3 @@
-# LAPORAN UJIAN TENGAH SEMESTER
-## PEMROGRAMAN WEB LANJUT — TK070
-
-**Universitas Amikom Yogyakarta**  
-**Program Studi:** S1 Teknik Komputer  
-**Nama:** Abiyyu Shafy Hidayat  
-**Tahun Akademik:** 2026/2027  
-**Judul:** CyberSOC API — Security Event Monitoring & Incident Response
-
 ## 1. Analisis Masalah
 
 Organisasi menerima log dari berbagai sumber seperti server, firewall, dan endpoint. Tanpa pencatatan terpusat, analis kesulitan menelusuri event, menerapkan aturan deteksi, memprioritaskan alert, dan mendokumentasikan investigasi.
