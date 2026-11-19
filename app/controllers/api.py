@@ -8,6 +8,23 @@ from app.services.common import success, failure, body_json, missing_fields
 api_bp = Blueprint("api", __name__)
 SEVERITIES = {"low", "medium", "high", "critical"}
 
+@api_bp.get("/")
+def api_info():
+    return success({
+        "name": "CyberSOC API",
+        "version": "1.0.0",
+        "description": "Security Event Monitoring & Incident Response API",
+        "status": "running",
+        "health": "/api/v1/health",
+        "endpoints": {
+            "log_sources": "/api/v1/log-sources",
+            "security_events": "/api/v1/security-events",
+            "detection_rules": "/api/v1/detection-rules",
+            "alerts": "/api/v1/alerts",
+            "investigations": "/api/v1/investigations"
+        }
+    }, "Welcome to CyberSOC API")
+
 @api_bp.get("/health")
 def health():
     return success({"status": "healthy"}, "CyberSOC API is running")
