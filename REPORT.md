@@ -95,9 +95,109 @@ Repository GitHub:
 
 https://github.com/abiyyushafy/CyberSOC_API
 
-Kode sumber dan dokumentasi telah dipublikasikan melalui repository GitHub tersebut. Release versi v1.0.0 direncanakan setelah seluruh dokumentasi dan pemeriksaan akhir selesai.
+Kode sumber dan dokumentasi telah dipublikasikan melalui repository GitHub tersebut. Proyek juga telah memiliki tag dan release versi `v1.0.0`.
 
-Aplikasi saat ini berjalan pada lingkungan lokal dan belum di-deploy ke hosting publik.
+Aplikasi telah di-deploy sebagai demo pada PythonAnywhere:
+- URL aplikasi: https://kaiselll.pythonanywhere.com/
+- Base URL API: https://kaiselll.pythonanywhere.com/api/v1
+- Health check: https://kaiselll.pythonanywhere.com/api/v1/health
+
+Deployment ini digunakan untuk demonstrasi akademik. Aplikasi belum ditujukan untuk lingkungan produksi.
+
+
+### 5.1 Deployment ke PythonAnywhere
+
+Setelah source code tersedia di GitHub, aplikasi di-deploy ke PythonAnywhere agar endpoint dapat diakses melalui internet.
+
+Tahapan deployment yang dilakukan:
+
+1. Membuat akun dan web application pada PythonAnywhere menggunakan konfigurasi manual.
+2. Melakukan clone repository GitHub ke direktori `/home/Kaiselll/CyberSOC_API`.
+3. Membuat virtual environment Python 3.13 bernama `cybersoc-env`.
+4. Menginstal dependency dari `requirements.txt`.
+5. Mengatur source code, working directory, dan virtual environment pada konfigurasi Web App.
+6. Mengonfigurasi file WSGI agar memanggil `create_app()` dari package `app`.
+7. Menjalankan `scripts/init_db.py` untuk membuat tabel database.
+8. Menjalankan `scripts/seed.py` untuk memasukkan data demonstrasi sintetis.
+9. Melakukan reload aplikasi melalui dashboard PythonAnywhere.
+
+Alamat deployment:
+
+- Halaman utama: https://kaiselll.pythonanywhere.com/
+- Base URL API: https://kaiselll.pythonanywhere.com/api/v1
+- Health check: https://kaiselll.pythonanywhere.com/api/v1/health
+
+Verifikasi deployment menunjukkan halaman utama dapat diakses dan endpoint health check memberikan HTTP 200 dengan status `healthy`.
+
+Deployment ini merupakan lingkungan demo akademik. Aplikasi belum dilengkapi autentikasi dan otorisasi, sehingga tidak digunakan untuk data sensitif atau operasional produksi.
+
+### 5.2 Prosedur Pengujian Menggunakan Windows CMD
+
+Pengujian endpoint dapat direproduksi melalui Command Prompt Windows menggunakan `curl`.
+
+**Menentukan base URL:**
+
+```cmd
+set BASE=https://kaiselll.pythonanywhere.com/api/v1
+```
+
+**Health check:**
+
+```cmd
+curl -i "%BASE%/health"
+```
+
+**GET seluruh resource:**
+
+```cmd
+curl -i "%BASE%/log-sources"
+curl -i "%BASE%/security-events"
+curl -i "%BASE%/detection-rules"
+curl -i "%BASE%/alerts"
+curl -i "%BASE%/investigations"
+```
+
+**POST sumber log untuk data uji:**
+
+```cmd
+curl -i -X POST "%BASE%/log-sources" -H "Content-Type: application/json" -d "{\"name\":\"CMD Test Server\",\"source_type\":\"windows_event\",\"host\":\"cmd-test.local\",\"environment\":\"staging\",\"status\":\"active\"}"
+```
+
+Catat `id` yang dikembalikan oleh respons POST. Gunakan ID tersebut untuk perintah berikut, dengan mengganti `<ID>` menggunakan angka ID aktual.
+
+**GET detail:**
+
+```cmd
+curl -i "%BASE%/log-sources/<ID>"
+```
+
+**PATCH status menjadi inactive:**
+
+```cmd
+curl -i -X PATCH "%BASE%/log-sources/<ID>" -H "Content-Type: application/json" -d "{\"status\":\"inactive\"}"
+```
+
+**Verifikasi perubahan:**
+
+```cmd
+curl -i "%BASE%/log-sources/<ID>"
+```
+
+**DELETE data uji:**
+
+```cmd
+curl -i -X DELETE "%BASE%/log-sources/<ID>"
+```
+
+**Verifikasi penghapusan:**
+
+```cmd
+curl -i "%BASE%/log-sources"
+```
+
+Perintah POST, PATCH, dan DELETE tersebut merupakan prosedur pengujian yang disediakan untuk dijalankan melalui CMD. Pengujian CRUD deployment yang telah tercatat sebelumnya dilakukan melalui PowerShell dengan hasil POST berhasil, PATCH berhasil, dan DELETE berhasil pada resource `log-sources`. Perintah CMD di atas tidak dinyatakan sebagai hasil eksekusi aktual sebelum dijalankan dan didokumentasikan.
+
+**Catatan pengujian:** gunakan hanya ID data uji yang baru dibuat. Jangan mengubah atau menghapus data demonstrasi utama.
 
 ## 6. Rencana Pengembangan UAS
 
@@ -119,7 +219,7 @@ Sistem memiliki lima tabel database yang saling berelasi, implementasi Flask dan
 
 Berdasarkan pengujian menggunakan pytest, seluruh empat skenario pengujian berhasil dijalankan.
 
-Meskipun demikian, pengembangan fitur keamanan dan deployment lanjutan masih diperlukan sebelum sistem dapat digunakan pada lingkungan produksi.
+Aplikasi telah di-deploy ke PythonAnywhere untuk demonstrasi dan pengujian online. Meskipun demikian, pengembangan fitur keamanan seperti autentikasi, otorisasi, rate limiting, serta penguatan konfigurasi masih diperlukan sebelum sistem dapat digunakan pada lingkungan produksi.
 
 ## Referensi dan Bantuan AI
 
