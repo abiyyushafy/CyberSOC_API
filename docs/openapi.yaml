@@ -1,0 +1,137 @@
+openapi: 3.0.3
+info:
+  title: CyberSOC API
+  version: 1.0.0
+  description: API simulasi monitoring security event dan incident response.
+servers:
+  - url: http://127.0.0.1:5000/api/v1
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200': {description: API healthy}
+  /log-sources:
+    get:
+      summary: List log sources
+      responses:
+        '200': {description: Log source list}
+    post:
+      summary: Register log source
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, source_type, host]
+              properties:
+                name: {type: string}
+                source_type: {type: string}
+                host: {type: string}
+                environment: {type: string, enum: [development, staging, production]}
+                status: {type: string, enum: [active, inactive]}
+      responses:
+        '201': {description: Created}
+        '409': {description: Duplicate name}
+        '422': {description: Validation error}
+  /log-sources/{id}:
+    parameters:
+      - {in: path, name: id, required: true, schema: {type: integer}}
+    get:
+      summary: Get log source
+      responses:
+        '200': {description: Detail}
+        '404': {description: Not found}
+    patch:
+      summary: Update log source
+      responses:
+        '200': {description: Updated}
+    delete:
+      summary: Delete log source
+      responses:
+        '200': {description: Deleted}
+        '409': {description: Source still has events}
+  /security-events:
+    get:
+      summary: Search and paginate security events
+      parameters:
+        - {in: query, name: search, schema: {type: string}}
+        - {in: query, name: severity, schema: {type: string, enum: [low, medium, high, critical]}}
+        - {in: query, name: source_id, schema: {type: integer}}
+        - {in: query, name: page, schema: {type: integer, default: 1}}
+        - {in: query, name: per_page, schema: {type: integer, default: 10, maximum: 100}}
+      responses:
+        '200': {description: Event list}
+    post:
+      summary: Ingest security event
+      responses:
+        '201': {description: Event created}
+        '422': {description: Validation error}
+  /security-events/{id}:
+    parameters:
+      - {in: path, name: id, required: true, schema: {type: integer}}
+    get:
+      summary: Get security event
+      responses:
+        '200': {description: Detail}
+        '404': {description: Not found}
+  /detection-rules:
+    get:
+      summary: List detection rules
+      responses:
+        '200': {description: Rule list}
+    post:
+      summary: Create detection rule
+      responses:
+        '201': {description: Rule created}
+        '422': {description: Validation error}
+  /detection-rules/{id}:
+    parameters:
+      - {in: path, name: id, required: true, schema: {type: integer}}
+    patch:
+      summary: Update detection rule
+      responses:
+        '200': {description: Rule updated}
+        '404': {description: Not found}
+  /alerts:
+    get:
+      summary: List alerts
+      parameters:
+        - {in: query, name: status, schema: {type: string}}
+        - {in: query, name: severity, schema: {type: string}}
+      responses:
+        '200': {description: Alert list}
+    post:
+      summary: Create alert from event and rule
+      responses:
+        '201': {description: Alert created}
+        '422': {description: Invalid references or payload}
+  /alerts/{id}:
+    parameters:
+      - {in: path, name: id, required: true, schema: {type: integer}}
+    get:
+      summary: Get alert
+      responses:
+        '200': {description: Detail}
+    patch:
+      summary: Update alert status
+      responses:
+        '200': {description: Updated}
+  /investigations:
+    get:
+      summary: List investigations
+      responses:
+        '200': {description: Investigation list}
+    post:
+      summary: Create investigation
+      responses:
+        '201': {description: Investigation created}
+        '422': {description: Validation error}
+  /investigations/{id}:
+    parameters:
+      - {in: path, name: id, required: true, schema: {type: integer}}
+    patch:
+      summary: Update investigation findings, action, or status
+      responses:
+        '200': {description: Updated}

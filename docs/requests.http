@@ -1,0 +1,71 @@
+### Health
+GET http://127.0.0.1:5000/api/v1/health
+
+### Create log source
+POST http://127.0.0.1:5000/api/v1/log-sources
+Content-Type: application/json
+
+{
+  "name": "Firewall Gateway",
+  "source_type": "firewall",
+  "host": "fw-lab.local",
+  "environment": "staging",
+  "status": "active"
+}
+
+### Ingest security event
+POST http://127.0.0.1:5000/api/v1/security-events
+Content-Type: application/json
+
+{
+  "source_id": 1,
+  "event_type": "authentication_failure",
+  "severity": "high",
+  "source_ip": "192.0.2.55",
+  "destination_ip": "192.0.2.10",
+  "username": "lab-user",
+  "message": "Synthetic repeated failed login event"
+}
+
+### Create detection rule
+POST http://127.0.0.1:5000/api/v1/detection-rules
+Content-Type: application/json
+
+{
+  "name": "Failed Login Detection",
+  "description": "Detect repeated failed authentication events in training data.",
+  "event_type": "authentication_failure",
+  "severity_threshold": "high",
+  "is_enabled": true
+}
+
+### Create alert (use event_id and rule_id returned above)
+POST http://127.0.0.1:5000/api/v1/alerts
+Content-Type: application/json
+
+{
+  "event_id": 1,
+  "rule_id": 1,
+  "title": "Possible brute-force activity",
+  "severity": "high"
+}
+
+### Create investigation
+POST http://127.0.0.1:5000/api/v1/investigations
+Content-Type: application/json
+
+{
+  "alert_id": 1,
+  "analyst_name": "SOC Analyst",
+  "findings": "Review of synthetic authentication events.",
+  "action_taken": "Escalated for simulated review"
+}
+
+### Search, filter, pagination
+GET http://127.0.0.1:5000/api/v1/security-events?search=failed&severity=high&page=1&per_page=10
+
+### Validation error example (expected 422)
+POST http://127.0.0.1:5000/api/v1/log-sources
+Content-Type: application/json
+
+{"name": "Missing fields"}
