@@ -280,8 +280,6 @@ curl -i https://kaiselll.pythonanywhere.com/api/v1/health
 
 Respons health check yang diharapkan menunjukkan HTTP `200 OK` dan status `healthy`.
 
-Deployment ini ditujukan untuk demonstrasi dan pengujian akademik, bukan penggunaan produksi. Pada konfigurasi saat ini API belum dilengkapi autentikasi dan otorisasi, sehingga jangan mengirimkan data sensitif atau data operasional nyata.
-
 ## 16. Pengujian API Menggunakan Windows CMD
 
 Bagian ini berisi contoh pengujian menggunakan Command Prompt Windows dan `curl`. Perintah menggunakan API demo yang telah di-deploy.
