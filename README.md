@@ -364,8 +364,6 @@ curl -i "%BASE%/log-sources"
 
 Pastikan ID data uji tidak lagi muncul pada daftar sumber log.
 
-> **Catatan:** Perintah POST, PATCH, dan DELETE di atas mengubah database deployment. Jalankan hanya untuk data uji yang dibuat sendiri. Pastikan `<ID>` diganti dengan ID hasil POST, bukan ID sumber log demonstrasi yang sudah ada.
-
 ### 16.10 Ringkasan Pengujian
 
 | Pengujian | Endpoint | Keterangan |
